@@ -222,12 +222,21 @@ def main():
     local_css()
     jobs = load_jobs()
 
+    def reset_app():
+        # Clear relevant session state and show first-visit message again
+        for k in ['resume_text']:
+            if k in st.session_state:
+                del st.session_state[k]
+        st.session_state.first_visit = True
+        st.experimental_rerun()
+
     if 'first_visit' not in st.session_state:
         st.session_state.first_visit = True
 
     with st.sidebar:
         st.markdown('<div class="big-logo">잡데렐라</div>', unsafe_allow_html=True)
         st.markdown('<div class="subtitle">당신의 동화 같은 커리어를 시작하는 곳, 잡데렐라!</div>', unsafe_allow_html=True)
+        st.button('홈으로', on_click=reset_app)
         menu = st.radio('메뉴', ['이력서 업로드','추천 채용 공고','직무 인터뷰','합격자소서 예시','콘텐츠LAB','취업톡톡'])
         st.markdown('---')
         st.caption('실시간 잡코리아 연동 및 이메일 전송은 선택 기능입니다.')
