@@ -237,7 +237,11 @@ def main():
         st.markdown('<div class="big-logo">잡데렐라</div>', unsafe_allow_html=True)
         st.markdown('<div class="subtitle">당신의 동화 같은 커리어를 시작하는 곳, 잡데렐라!</div>', unsafe_allow_html=True)
         st.button('홈으로', on_click=reset_app)
-        menu = st.radio('메뉴', ['이력서 업로드','추천 채용 공고','직무 인터뷰','합격자소서 예시','콘텐츠LAB','취업톡톡'])
+        menu_options = ['이력서 업로드','추천 채용 공고','직무 인터뷰','합격자소서 예시','콘텐츠LAB','취업톡톡']
+        # If no resume uploaded yet, default to the upload screen
+        has_resume = 'resume_text' in st.session_state and st.session_state.get('resume_text')
+        default_index = 0 if not has_resume else menu_options.index(st.session_state.get('menu','이력서 업로드')) if st.session_state.get('menu') in menu_options else 0
+        st.radio('메뉴', menu_options, index=default_index, key='menu')
         st.markdown('---')
         st.caption('실시간 잡코리아 연동 및 이메일 전송은 선택 기능입니다.')
 
@@ -252,6 +256,7 @@ def main():
     with col2:
         st.button('프로필 설정', disabled=True)
 
+    menu = st.session_state.get('menu', '이력서 업로드')
     if menu == '이력서 업로드':
         st.header('이력서 업로드')
         st.markdown('PDF 또는 Word(.docx) 파일을 업로드하면 분석합니다.')
