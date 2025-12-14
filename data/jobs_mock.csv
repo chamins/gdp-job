@@ -1,0 +1,11 @@
+company,title,region,salary,exp_level,description,url
+NICE Tech,데이터 분석가,서울,4500,경력,"데이터 가공, SQL, Python, 통계 기반 인사이트 도출 경험 필요.",https://www.jobkorea.co.kr/sample1
+DreamWorks,프론트엔드 개발자,부산,4200,경력,"React, JavaScript, HTML/CSS, 성능 최적화 경험 우대.",https://www.jobkorea.co.kr/sample2
+A-Start,AI 엔지니어,서울,6000,경력,"머신러닝 모델 개발, Python, TensorFlow 또는 PyTorch 경험.",https://www.jobkorea.co.kr/sample3
+SimpleCo,신입 개발자,대전,3200,신입,"기본적인 코딩 능력, 알고리즘 이해, 협업 툴 경험.",https://www.jobkorea.co.kr/sample4
+BizCorp,데이터 엔지니어,서울,5200,경력,"ETL 파이프라인 구축, SQL, Python, AWS 경험 우대.",https://www.jobkorea.co.kr/sample5
+StartLab,백엔드 개발자,서울,4800,경력,"Python/Java 기반 서비스 개발, DB 설계 경험.",https://www.jobkorea.co.kr/sample6
+EduPlus,교육 콘텐츠 기획자,경기,3800,경력,"교육 콘텐츠 기획 및 운영 경험, 트렌드 분석 능력.",https://www.jobkorea.co.kr/sample7
+RetailX,머천다이저,서울,3600,경력,"상품 기획 및 데이터 분석 능력, 유통업 이해.",https://www.jobkorea.co.kr/sample8
+HealthOne,데이터 분석 인턴,서울,2500,신입,"데이터 분석 보조 업무, 기본 통계 및 Excel 활용 가능자.",https://www.jobkorea.co.kr/sample9
+FinEdge,금융 데이터 분석가,서울,7000,경력,"금융 데이터 분석, 리스크 모델링, Python 및 SQL 필수.",https://www.jobkorea.co.kr/sample10
