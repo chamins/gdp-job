@@ -97,11 +97,17 @@ def parse_resume(uploaded_file):
 def extract_keywords_tfidf(text, top_n=10):
     if TfidfVectorizer is None:
         return []
+    if not text or not text.strip():
+        return []
     vec = TfidfVectorizer(stop_words='english', max_features=2000)
-    tfidf = vec.fit_transform([text])
+    try:
+        tfidf = vec.fit_transform([text])
+    except ValueError:
+        return []
     indices = tfidf.toarray()[0].argsort()[::-1][:top_n]
     features = vec.get_feature_names_out()
-    return [features[i] for i in indices]
+    # ensure indices map to available features
+    return [features[i] for i in indices if i < len(features)]
 
 
 def recommend_jobs(resume_text, jobs_df, top_n=5, use_transformer=False):
@@ -131,7 +137,10 @@ def recommend_jobs(resume_text, jobs_df, top_n=5, use_transformer=False):
         return jobs_df.head(0)
     corpus = jobs_df['description'].fillna('')
     vect = TfidfVectorizer(stop_words='english')
-    tfidf = vect.fit_transform(corpus.tolist() + [resume_text])
+    try:
+        tfidf = vect.fit_transform(corpus.tolist() + [resume_text])
+    except ValueError:
+        return jobs_df.head(0)
     resume_vec = tfidf[-1]
     job_vecs = tfidf[:-1]
     cosine_sim = linear_kernel(resume_vec, job_vecs).flatten()
