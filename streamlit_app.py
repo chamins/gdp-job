@@ -27,14 +27,9 @@ try:
     from bs4 import BeautifulSoup
 except Exception:
     BeautifulSoup = None
-try:
-    from sentence_transformers import SentenceTransformer
-    from sklearn.metrics.pairwise import cosine_similarity
-    S2_AVAILABLE = True
-    S2_MODEL = SentenceTransformer('all-MiniLM-L6-v2')
-except Exception:
-    S2_AVAILABLE = False
-    S2_MODEL = None
+# sentence-transformers 모델은 큰 용량이므로 지연 로딩합니다.
+S2_AVAILABLE = False
+S2_MODEL = None
 
 
 st.set_page_config(page_title='잡데렐라', page_icon='🫧', layout='wide')
@@ -112,14 +107,25 @@ def extract_keywords_tfidf(text, top_n=10):
 def recommend_jobs(resume_text, jobs_df, top_n=5, use_transformer=False):
     if jobs_df.empty or not resume_text.strip():
         return jobs_df.head(0)
-    if use_transformer and S2_AVAILABLE:
-        corpus = jobs_df['description'].fillna('').tolist()
-        emb = S2_MODEL.encode(corpus, convert_to_numpy=True)
-        r_emb = S2_MODEL.encode([resume_text], convert_to_numpy=True)
-        sims = cosine_similarity(r_emb, emb).flatten()
-        jobs = jobs_df.copy()
-        jobs['score'] = sims
-        return jobs.sort_values('score', ascending=False).head(top_n)
+    if use_transformer:
+        global S2_AVAILABLE, S2_MODEL
+        if not S2_AVAILABLE:
+            try:
+                from sentence_transformers import SentenceTransformer
+                from sklearn.metrics.pairwise import cosine_similarity
+                S2_MODEL = SentenceTransformer('all-MiniLM-L6-v2')
+                S2_AVAILABLE = True
+            except Exception:
+                S2_AVAILABLE = False
+        if S2_AVAILABLE:
+            corpus = jobs_df['description'].fillna('').tolist()
+            emb = S2_MODEL.encode(corpus, convert_to_numpy=True)
+            r_emb = S2_MODEL.encode([resume_text], convert_to_numpy=True)
+            from sklearn.metrics.pairwise import cosine_similarity
+            sims = cosine_similarity(r_emb, emb).flatten()
+            jobs = jobs_df.copy()
+            jobs['score'] = sims
+            return jobs.sort_values('score', ascending=False).head(top_n)
     # fallback TF-IDF
     if TfidfVectorizer is None:
         return jobs_df.head(0)
